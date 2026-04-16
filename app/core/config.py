@@ -16,53 +16,57 @@ try:
 except ImportError:
     pass
 
+def clean_env(name, default=""):
+    """Get env var and strip surrounding quotes if present."""
+    value = os.getenv(name, default)
+    if value and len(value) >= 2:
+        if (value[0] == '"' and value[-1] == '"') or (value[0] == "'" and value[-1] == "'"):
+            value = value[1:-1]
+    return value
+
 # ========== DEBUG ==========
 print("=" * 60)
 print("🔍 RAILWAY DEBUG: Checking environment variables")
-print(f"🔍 DATABASE_URL: {os.getenv('DATABASE_URL', 'NOT SET')[:80]}")
-print(f"🔍 DB_HOST: {os.getenv('DB_HOST', 'NOT SET')}")
-print(f"🔍 PORT: {os.getenv('PORT', 'NOT SET')}")
-print(f"🔍 All env vars with DB/PG: {sorted([k for k in os.environ.keys() if 'DB' in k or 'PG' in k or 'DATABASE' in k])}")
+print(f"🔍 DATABASE_URL: {clean_env('DATABASE_URL', 'NOT SET')[:80]}")
+print(f"🔍 ENCRYPTION_KEY: {'SET (' + str(len(clean_env('ENCRYPTION_KEY'))) + ' chars)' if clean_env('ENCRYPTION_KEY') else 'NOT SET'}")
+print(f"🔍 JWT_SECRET_KEY: {'SET' if clean_env('JWT_SECRET_KEY') else 'NOT SET'}")
+print(f"🔍 GROQ_API_KEY: {'SET' if clean_env('GROQ_API_KEY') else 'NOT SET'}")
+print(f"🔍 AI_PROVIDER: {clean_env('AI_PROVIDER', 'NOT SET')}")
 print("=" * 60)
 # ========== END DEBUG ==========
 
-
 # --- Database ---
-# Try Railway's DATABASE_URL first (production), fall back to individual vars (local dev)
-DATABASE_URL = os.getenv("DATABASE_URL", "")
-
+DATABASE_URL = clean_env("DATABASE_URL", "")
 if not DATABASE_URL:
-    DB_HOST = os.getenv("DB_HOST", "localhost")
-    DB_PORT = os.getenv("DB_PORT", "5432")
-    DB_NAME = os.getenv("DB_NAME", "datapulse_db")
-    DB_USER = os.getenv("DB_USER", "postgres")
-    DB_PASSWORD = os.getenv("DB_PASSWORD", "admin123")
+    DB_HOST = clean_env("DB_HOST", "localhost")
+    DB_PORT = clean_env("DB_PORT", "5432")
+    DB_NAME = clean_env("DB_NAME", "datapulse_db")
+    DB_USER = clean_env("DB_USER", "postgres")
+    DB_PASSWORD = clean_env("DB_PASSWORD", "admin123")
     DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 # --- Encryption ---
-ENCRYPTION_KEY = os.getenv("ENCRYPTION_KEY", "")
+ENCRYPTION_KEY = clean_env("ENCRYPTION_KEY", "")
 
 # --- JWT ---
-JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "change-this-in-production")
+JWT_SECRET_KEY = clean_env("JWT_SECRET_KEY", "change-this-in-production")
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRY_HOURS = 24
-JWT_EXPIRY_HOURS = 24
-JWT_ACCESS_TOKEN_EXPIRE_MINUTES = JWT_EXPIRY_HOURS * 60  # 1440 minutes
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES = JWT_EXPIRY_HOURS * 60
 
 # --- AI / LLM ---
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+GROQ_API_KEY = clean_env("GROQ_API_KEY", "")
 GROQ_MODEL = "llama-3.3-70b-versatile"
 
 # --- Ollama (Local LLM) ---
 OLLAMA_MODEL = "llama3.2"
 OLLAMA_HOST = "http://localhost:11434"
 
-# --- AI Provider Selection ---
-AI_PROVIDER = os.getenv("AI_PROVIDER", "groq")  # "groq" or "ollama"
+AI_PROVIDER = clean_env("AI_PROVIDER", "groq")
 
 # --- Email (SMTP) ---
-SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
-SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
-SMTP_USER = os.getenv("SMTP_USER", "")
-SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
-ALERT_EMAIL = os.getenv("ALERT_EMAIL", "")
+SMTP_HOST = clean_env("SMTP_HOST", "smtp.gmail.com")
+SMTP_PORT = int(clean_env("SMTP_PORT", "587"))
+SMTP_USER = clean_env("SMTP_USER", "")
+SMTP_PASSWORD = clean_env("SMTP_PASSWORD", "")
+ALERT_EMAIL = clean_env("ALERT_EMAIL", "")
