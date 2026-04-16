@@ -1,0 +1,19 @@
+data masking flow
+
+User asks question → AI generates SQL → Query runs on DB
+                                              ↓
+                          Raw data (real customer_ids)
+                                              ↓
+                          DataMasker applies rules
+                                              ↓
+                      Masked data (13*****, 14*****, etc.)
+                                              ↓
+              ┌────────────────┴────────────────┐
+              ↓                                  ↓
+      Sent to AI for                      Shown to user
+      explanation                         in dashboard
+
+
+
+Supported mask types (you can add more rules for any of these):
+Mask typeExample inputExample outputemailsairam111297@gmail.com************@gmail.comphone1234567890123*****90address123 Main St, NYC123 **** **, ***nameJohn SmithJ*** S****credit_card1234567812345678************5678ssn123-45-6789***-**-6789fullanything********customwith visible_start/enduser-defined
