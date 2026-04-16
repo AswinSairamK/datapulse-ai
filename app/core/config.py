@@ -47,6 +47,12 @@ JWT_ACCESS_TOKEN_EXPIRE_MINUTES = JWT_EXPIRY_HOURS * 60
 
 # --- AI / LLM ---
 GROQ_API_KEY = clean_env("GROQ_API_KEY", "")
+# Temporary debug
+if GROQ_API_KEY:
+    print(f"🔑 GROQ key loaded: {GROQ_API_KEY[:8]}...{GROQ_API_KEY[-4:]} (length: {len(GROQ_API_KEY)})")
+else:
+    print("🔑 GROQ key: NOT SET")
+    
 GROQ_MODEL = "llama-3.3-70b-versatile"
 
 # --- Ollama (Local LLM) ---
