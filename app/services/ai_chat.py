@@ -322,3 +322,12 @@ Do NOT include any SQL or code in your response."""
                 "rows": result["rows"][:50],
                 "chart_config": chart_config
             }
+        else:
+            return {
+                "user_message": question,
+                "generated_sql": sql,
+                "ai_response": f"Query failed: {result.get('error', 'Unknown error')}",
+                "query_success": False,
+                "columns": [],
+                "rows": []
+            }
