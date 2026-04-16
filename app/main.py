@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -25,6 +26,15 @@ app = FastAPI(
     description="Intelligent Data Quality Monitoring & AI-Powered Analytics",
     version="1.0.0",
     lifespan=lifespan
+)
+
+# Enable CORS for the Streamlit dashboard
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins (OK for demo)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Register the rate limiter with the app
