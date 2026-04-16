@@ -24,16 +24,7 @@ def clean_env(name, default=""):
             value = value[1:-1]
     return value
 
-# ========== DEBUG ==========
-print("=" * 60)
-print("🔍 RAILWAY DEBUG: Checking environment variables")
-print(f"🔍 DATABASE_URL: {clean_env('DATABASE_URL', 'NOT SET')[:80]}")
-print(f"🔍 ENCRYPTION_KEY: {'SET (' + str(len(clean_env('ENCRYPTION_KEY'))) + ' chars)' if clean_env('ENCRYPTION_KEY') else 'NOT SET'}")
-print(f"🔍 JWT_SECRET_KEY: {'SET' if clean_env('JWT_SECRET_KEY') else 'NOT SET'}")
-print(f"🔍 GROQ_API_KEY: {'SET' if clean_env('GROQ_API_KEY') else 'NOT SET'}")
-print(f"🔍 AI_PROVIDER: {clean_env('AI_PROVIDER', 'NOT SET')}")
-print("=" * 60)
-# ========== END DEBUG ==========
+
 
 # --- Database ---
 DATABASE_URL = clean_env("DATABASE_URL", "")
