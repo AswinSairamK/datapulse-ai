@@ -14,9 +14,14 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
+import os
 
 # --- Config ---
-API_BASE = "http://localhost:8000/api"
+# API URL — reads from Streamlit secrets in production, env var, or falls back to localhost
+try:
+    API_BASE = st.secrets["API_BASE"]
+except (KeyError, FileNotFoundError):
+    API_BASE = os.getenv("API_BASE", "http://localhost:8000/api")
 
 st.set_page_config(
     page_title="DataPulse AI",
