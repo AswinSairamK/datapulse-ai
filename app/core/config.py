@@ -16,6 +16,17 @@ try:
 except ImportError:
     pass
 
+# ========== DEBUG ==========
+print("=" * 60)
+print("🔍 RAILWAY DEBUG: Checking environment variables")
+print(f"🔍 DATABASE_URL: {os.getenv('DATABASE_URL', 'NOT SET')[:80]}")
+print(f"🔍 DB_HOST: {os.getenv('DB_HOST', 'NOT SET')}")
+print(f"🔍 PORT: {os.getenv('PORT', 'NOT SET')}")
+print(f"🔍 All env vars with DB/PG: {sorted([k for k in os.environ.keys() if 'DB' in k or 'PG' in k or 'DATABASE' in k])}")
+print("=" * 60)
+# ========== END DEBUG ==========
+
+
 # --- Database ---
 # Try Railway's DATABASE_URL first (production), fall back to individual vars (local dev)
 DATABASE_URL = os.getenv("DATABASE_URL", "")
