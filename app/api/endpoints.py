@@ -336,15 +336,19 @@ from app.services.dq_engine import DQEngine
 
 @router.post("/checks/run/{data_source_id}")
 @limiter.limit("10/minute")
-def run_checks(data_source_id: int,request: Request, db: Session = Depends(get_db)):
+def run_checks(
+    data_source_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     """
     Run all active DQ checks for a data source.
     Returns health score and individual check results.
     """
     engine = DQEngine(db)
-    results = engine.run_checks_for_source(data_source_id)
+    results = engine.run_checks_for_source(data_source_id, user_id=current_user.id)
     return results
-
 
 @router.get("/checks/results/{data_source_id}")
 def get_check_results(data_source_id: int, limit: int = 50, db: Session = Depends(get_db)):
@@ -542,7 +546,7 @@ def delete_masking_rule(rule_id: int, request: Request, db: Session = Depends(ge
 # ============================================================
 
 @router.post("/alerts/test/{data_source_id}")
-def test_alert(data_source_id: int, db: Session = Depends(get_db)):
+def test_alert(data_source_id: int, db: Session = Depends(get_db),current_user: User = Depends(get_current_user)):
     """
     Manually trigger a data quality check and send an email alert.
     Used to test the email setup.
@@ -555,7 +559,7 @@ def test_alert(data_source_id: int, db: Session = Depends(get_db)):
     
     # Run the checks
     engine = DQEngine(db)
-    results = engine.run_checks_for_source(data_source_id)
+    results = engine.run_checks_for_source(data_source_id,  user_id=current_user.id)
     
     if "error" in results:
         raise HTTPException(status_code=400, detail=results["error"])

@@ -33,7 +33,7 @@ def run_all_checks():
         for source in sources:
             print(f"  Checking: {source.name}...")
             engine = DQEngine(db)
-            result = engine.run_checks_for_source(source.id)
+            result = engine.run_checks_for_source(source.id,  user_id=source.user_id)
             
             if "error" in result:
                 print(f"    Error: {result['error']}")

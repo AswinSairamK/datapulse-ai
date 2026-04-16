@@ -344,7 +344,7 @@ class DQEngine:
     # Main execution method
     # ============================================================
 
-    def run_checks_for_source(self, source_id: int) -> dict:
+    def run_checks_for_source(self, source_id: int,  user_id: int = None) -> dict:
         """
         Run ALL active monitoring rules for a given data source.
         Validates table/column names against schema before running queries.
@@ -422,6 +422,7 @@ class DQEngine:
 
             # Save the result to DataPulse's database
             check_result = CheckResult(
+                user_id=user_id,
                 data_source_id=source_id,
                 rule_id=rule.id,
                 table_name=rule.table_name,
